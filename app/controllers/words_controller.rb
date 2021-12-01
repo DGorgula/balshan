@@ -25,8 +25,11 @@ class WordsController < ApplicationController
 
   # POST /words or /words.json
   def generate_word
-
-    @word = get_optional_words
+    optionalWords = get_optional_words
+    chosenWord = optionalWords[rand(optionalWords.length)]
+    @word = chosenWord["ktiv_male"]
+    @keyword = chosenWord["keyword"]
+    @definition = chosenWord["hagdara"]
   end
 
 
@@ -94,6 +97,18 @@ class WordsController < ApplicationController
       # Fetch and parse HTML document
       # url = stringex.acts_as_url 'https://kalanit.hebrew-academy.org.il/api/Ac?SearchString='
       doc = JSON.parse(URI.open('https://kalanit.hebrew-academy.org.il/api/Ac?SearchString='+letter1+letter2).read)
-      doc
+      doc = clean(doc)
+      if doc.length>0
+
+        doc
+      else
+        get_optional_words
+      end
+    end
+    def clean(arr)
+      arr.delete_if { |obj|
+        !obj["ktiv_male"] or obj["ktiv_male"].length<4 or obj["ktiv_male"].include?(" ") or obj["ktiv_male"].include?("-")
+      }
+
     end
 end
