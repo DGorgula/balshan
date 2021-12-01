@@ -1,7 +1,3 @@
-require 'nokogiri'
-require 'open-uri'
-require 'stringex'
-
 class WordsController < ApplicationController
   before_action :set_word, only: %i[ show edit update destroy ]
 
@@ -22,32 +18,6 @@ class WordsController < ApplicationController
   # GET /words/1/edit
   def edit
   end
-
-  # POST /words or /words.json
-  def generate_word
-    optionalWords = get_optional_words
-    @chosenWord = optionalWords[rand(optionalWords.length)]
-    @word = @chosenWord["ktiv_male"]
-    @isWordSaved = Word.find_by(ktiv_male: @word)
-    @keyword = @chosenWord["keyword"].split("_")[0]
-    @definition = @chosenWord["hagdara"]
-    try = Word.new({:word => @keyword, :letterCount => @word.length, :sessionCount => 0, :ktiv_male => @word, :definition => @definition})
-    @bla = "neutral"
-    if @isWordSaved
-      @bla = "True"
-    else
-      @bla = "False"
-    end
-    try.save
-    # if @try.save
-    #   format.html { redirect_to @try, notice: "Word was successfully created." }
-    #   format.json { render :show, status: :created, location: @try }
-    # else
-    #   format.html { render :new, status: :unprocessable_entity }
-    #   format.json { render json: @try.errors, status: :unprocessable_entity }
-    # end
-  end
-
 
   # POST /words or /words.json
   def create
@@ -95,36 +65,5 @@ class WordsController < ApplicationController
     # Only allow a list of trusted parameters through.
     def word_params
       params.require(:word).permit(:word, :letterCount, :sessionCount, :ktiv_male, :definition)
-    end
-
-    # Get Request to Calanit to get optional words
-    def get_optional_words
-      endingLetters = ["%D7%9a", "%D7%9d", "%D7%9f", "%D7%a3", "%D7%a5"]
-      letters = Array.new(27) { |e|
-        e = "%D7%"+(144 + e).to_s(16)
-      }
-      endingLetters.each { |arr|
-          letters.delete(arr)
-      }
-
-
-      letter1 = letters[rand(letters.length)]
-      letter2 = letters[rand(letters.length)]
-      # Fetch and parse HTML document
-      # url = stringex.acts_as_url 'https://kalanit.hebrew-academy.org.il/api/Ac?SearchString='
-      doc = JSON.parse(URI.open('https://kalanit.hebrew-academy.org.il/api/Ac?SearchString='+letter1+letter2).read)
-      doc = clean(doc)
-      if doc.length>0
-
-        doc
-      else
-        get_optional_words
-      end
-    end
-    def clean(arr)
-      arr.delete_if { |obj|
-        !obj["ktiv_male"] or obj["ktiv_male"].length<4 or obj["ktiv_male"].include?(" ") or obj["ktiv_male"].include?("-") or obj["ktiv_male"].include?("\"")
-      }
-
     end
 end

@@ -5,6 +5,7 @@
 <table>
   <thead>
     <tr>
+      <th>Word ID</th>
       <th>Word</th>
       <th>Stepcount</th>
       <th colspan="3"></th>
@@ -15,6 +16,7 @@
     <% @games.each do |game| %>
       <tr>
         <td><%= game.word_id %></td>
+        <td><%= game.word.ktiv_male %></td>
         <td><%= game.stepCount %></td>
         <td><%= link_to 'Show', game %></td>
         <td><%= link_to 'Edit', edit_game_path(game) %></td>

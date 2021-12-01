@@ -4,9 +4,41 @@ class GamesController < ApplicationController
   # GET /games or /games.json
   def index
     @games = Game.all
+    # @games = Game.joins(word: {id: })
+  end
+
+  #
+  def check_step
+    redirect_to game
+  end
+
+  def game
+    @bla = "dfgsdsfh"
   end
   def generate
-    
+    optionalWords = get_optional_words
+    @chosenWord = optionalWords[rand(optionalWords.length)]
+    @word = @chosenWord["ktiv_male"]
+    @isWordSaved = Word.find_by(ktiv_male: @word)
+    @keyword = @chosenWord["keyword"].split("_")[0]
+    @definition = @chosenWord["hagdara"]
+    @try = Word.new({:word => @keyword, :letterCount => @word.length, :sessionCount => 0, :ktiv_male => @word, :definition => @definition})
+    @bla = "neutral"
+    if @isWordSaved
+      @bla = "True"
+    else
+      @bla = "False"
+    end
+    @try.save
+    @game = Game.new({:word => @try, :stepCount => 0})
+    @game.save
+    # if @try.save
+    #   format.html { redirect_to @try, notice: "Word was successfully created." }
+    #   format.json { render :show, status: :created, location: @try }
+    # else
+    #   format.html { render :new, status: :unprocessable_entity }
+    #   format.json { render json: @try.errors, status: :unprocessable_entity }
+    # end
   end
   # GET /games/1 or /games/1.json
   def show
@@ -67,5 +99,33 @@ class GamesController < ApplicationController
     # Only allow a list of trusted parameters through.
     def game_params
       params.require(:game).permit(:word_id, :stepCount)
+    end
+
+    # Http Request to Calanit to get optional words
+    def get_optional_words
+      endingLetters = ["%D7%9a", "%D7%9d", "%D7%9f", "%D7%a3", "%D7%a5"]
+      letters = Array.new(27) { |e|
+        e = "%D7%"+(144 + e).to_s(16)
+      }
+      endingLetters.each { |arr|
+          letters.delete(arr)
+      }
+
+
+      letter1 = letters[rand(letters.length)]
+      letter2 = letters[rand(letters.length)]
+      doc = JSON.parse(URI.open('https://kalanit.hebrew-academy.org.il/api/Ac?SearchString='+letter1+letter2).read)
+      doc = clean(doc)
+      if doc.length>0
+        doc
+      else
+        get_optional_words
+      end
+    end
+    def clean(arr)
+      arr.delete_if { |obj|
+        !obj["ktiv_male"] or obj["ktiv_male"].length<4 or obj["ktiv_male"].include?(" ") or obj["ktiv_male"].include?("-") or obj["ktiv_male"].include?("\"")
+      }
+
     end
 end

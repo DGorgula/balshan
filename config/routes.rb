@@ -2,7 +2,7 @@ Rails.application.routes.draw do
   resources :steps
   resources :revealed_indices
   resources :games
-  root 'words#generate_word'
+  root 'games#generate'
   resources :words
   # get 'photos/:id', to: 'photos#show'
 
