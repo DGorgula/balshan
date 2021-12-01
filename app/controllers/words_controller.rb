@@ -26,10 +26,26 @@ class WordsController < ApplicationController
   # POST /words or /words.json
   def generate_word
     optionalWords = get_optional_words
-    chosenWord = optionalWords[rand(optionalWords.length)]
-    @word = chosenWord["ktiv_male"]
-    @keyword = chosenWord["keyword"]
-    @definition = chosenWord["hagdara"]
+    @chosenWord = optionalWords[rand(optionalWords.length)]
+    @word = @chosenWord["ktiv_male"]
+    @isWordSaved = Word.find_by(ktiv_male: @word)
+    @keyword = @chosenWord["keyword"].split("_")[0]
+    @definition = @chosenWord["hagdara"]
+    try = Word.new({:word => @keyword, :letterCount => @word.length, :sessionCount => 0, :ktiv_male => @word, :definition => @definition})
+    @bla = "neutral"
+    if @isWordSaved
+      @bla = "True"
+    else
+      @bla = "False"
+    end
+    try.save
+    # if @try.save
+    #   format.html { redirect_to @try, notice: "Word was successfully created." }
+    #   format.json { render :show, status: :created, location: @try }
+    # else
+    #   format.html { render :new, status: :unprocessable_entity }
+    #   format.json { render json: @try.errors, status: :unprocessable_entity }
+    # end
   end
 
 
@@ -107,7 +123,7 @@ class WordsController < ApplicationController
     end
     def clean(arr)
       arr.delete_if { |obj|
-        !obj["ktiv_male"] or obj["ktiv_male"].length<4 or obj["ktiv_male"].include?(" ") or obj["ktiv_male"].include?("-")
+        !obj["ktiv_male"] or obj["ktiv_male"].length<4 or obj["ktiv_male"].include?(" ") or obj["ktiv_male"].include?("-") or obj["ktiv_male"].include?("\"")
       }
 
     end
