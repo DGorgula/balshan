@@ -1,0 +1,11 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  word: MyString
+  letterCount: 1
+  sessionCount: 1
+
+two:
+  word: MyString
+  letterCount: 1
+  sessionCount: 1
