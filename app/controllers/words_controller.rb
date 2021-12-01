@@ -78,7 +78,7 @@ class WordsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def word_params
-      params.require(:word).permit(:word, :letterCount, :sessionCount)
+      params.require(:word).permit(:word, :letterCount, :sessionCount, :ktiv_male, :definition)
     end
 
     # Get Request to Calanit to get optional words
