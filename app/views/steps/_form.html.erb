@@ -1,0 +1,37 @@
+<%= form_with(model: step) do |form| %>
+  <% if step.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(step.errors.count, "error") %> prohibited this step from being saved:</h2>
+
+      <ul>
+        <% step.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :game_id %>
+    <%= form.text_field :game_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :stepWord %>
+    <%= form.text_field :stepWord %>
+  </div>
+
+  <div class="field">
+    <%= form.label :inPlaceLetterCount %>
+    <%= form.number_field :inPlaceLetterCount %>
+  </div>
+
+  <div class="field">
+    <%= form.label :existLetterCount %>
+    <%= form.number_field :existLetterCount %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

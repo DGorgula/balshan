@@ -10,10 +10,36 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_12_01_145705) do
+ActiveRecord::Schema.define(version: 2021_12_01_173518) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "games", force: :cascade do |t|
+    t.bigint "word_id", null: false
+    t.integer "stepCount"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["word_id"], name: "index_games_on_word_id"
+  end
+
+  create_table "revealed_indices", force: :cascade do |t|
+    t.bigint "game_id", null: false
+    t.integer "index"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["game_id"], name: "index_revealed_indices_on_game_id"
+  end
+
+  create_table "steps", force: :cascade do |t|
+    t.bigint "game_id", null: false
+    t.string "stepWord"
+    t.integer "inPlaceLetterCount"
+    t.integer "existLetterCount"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["game_id"], name: "index_steps_on_game_id"
+  end
 
   create_table "words", force: :cascade do |t|
     t.string "word"
@@ -25,4 +51,7 @@ ActiveRecord::Schema.define(version: 2021_12_01_145705) do
     t.string "ktiv_male"
   end
 
+  add_foreign_key "games", "words"
+  add_foreign_key "revealed_indices", "games"
+  add_foreign_key "steps", "games"
 end

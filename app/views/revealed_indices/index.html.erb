@@ -1,0 +1,29 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Revealed Indices</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Game</th>
+      <th>Index</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @revealed_indices.each do |revealed_index| %>
+      <tr>
+        <td><%= revealed_index.game_id %></td>
+        <td><%= revealed_index.index %></td>
+        <td><%= link_to 'Show', revealed_index %></td>
+        <td><%= link_to 'Edit', edit_revealed_index_path(revealed_index) %></td>
+        <td><%= link_to 'Destroy', revealed_index, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Revealed Index', new_revealed_index_path %>

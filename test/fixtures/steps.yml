@@ -1,0 +1,13 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  game: one
+  stepWord: MyString
+  inPlaceLetterCount: 1
+  existLetterCount: 1
+
+two:
+  game: two
+  stepWord: MyString
+  inPlaceLetterCount: 1
+  existLetterCount: 1

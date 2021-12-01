@@ -1,0 +1,14 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Game:</strong>
+  <%= @revealed_index.game_id %>
+</p>
+
+<p>
+  <strong>Index:</strong>
+  <%= @revealed_index.index %>
+</p>
+
+<%= link_to 'Edit', edit_revealed_index_path(@revealed_index) %> |
+<%= link_to 'Back', revealed_indices_path %>
