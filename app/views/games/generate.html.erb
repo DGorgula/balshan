@@ -1,12 +1,11 @@
-
-<script type="text/javascript">
-  function test(){
-    console.log("getting closer!");
-  }
-</script>
 <%="_ " * @word.length %>
 </br>
 </br>
-<%= ( text_field_tag :require)*@word.length %>
-</br>
-<%= submit_tag "Check", onclick:'test()'%>
+<%= form_with( url: '/games/check_step') do |form| %>
+  <%  for times in 0..@word.length-1 %>
+    <%=  form.text_field "letter"+times.to_s, maxlength: 1%>
+    <% end %>
+    <%= form.text_field "word_length", hidden: true, value: @word.length %>
+    <%= form.text_field "word_id", hidden: true, value: @id %>
+  <%=  form.submit %>
+  <% end %>

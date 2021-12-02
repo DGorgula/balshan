@@ -1,3 +1,4 @@
+require "open-uri"
 class GamesController < ApplicationController
   before_action :set_game, only: %i[ show edit update destroy ]
 
@@ -9,7 +10,25 @@ class GamesController < ApplicationController
 
   #
   def check_step
-    redirect_to game
+    word_length = params['word_length'].to_i-1
+    @word_id = params['word_id'].to_i
+    word = Word.find(@word_id)
+    @word = word["ktiv_male"]
+
+    @exist = []
+    @on_spot = []
+    for t in 0..word_length
+      letter = params["letter"+t.to_s]
+      if @word.include?(letter)
+        if @word.index(letter) === t
+          @on_spot.append({"index"=>t, "letter" => letter})
+        else
+          @exist.append({"index"=>t, "letter" => letter})
+        end
+
+      end
+    end
+    # @bla = params.receive_if{|letter| letter.match?(/^d$/)}
   end
 
   def game
@@ -27,11 +46,12 @@ class GamesController < ApplicationController
     if @isWordSaved
       @bla = "True"
     else
+      @try.save
+      @id = @try.id
+      @game = Game.new({:word => @try, :stepCount => 0})
+      @game.save
       @bla = "False"
     end
-    @try.save
-    @game = Game.new({:word => @try, :stepCount => 0})
-    @game.save
     # if @try.save
     #   format.html { redirect_to @try, notice: "Word was successfully created." }
     #   format.json { render :show, status: :created, location: @try }
