@@ -12,23 +12,30 @@ class GamesController < ApplicationController
   def check_step
     word_length = params['word_length'].to_i-1
     @word_id = params['word_id'].to_i
+    @game = Game.find(params['game_id'].to_i)
     word = Word.find(@word_id)
     @word = word["ktiv_male"]
-
+    @stepWord = ""
     @exist = []
-    @on_spot = []
+    @in_place = []
     for t in 0..word_length
       letter = params["letter"+t.to_s]
+      @stepWord = @stepWord + letter
       if @word.include?(letter)
         if @word.index(letter) === t
-          @on_spot.append({"index"=>t, "letter" => letter})
+          @in_place.append({"index"=>t, "letter" => letter})
+          newIndex = RevealedIndex.new({:game => @game, :index => t})
+          newIndex.save
         else
           @exist.append({"index"=>t, "letter" => letter})
         end
 
       end
     end
-    # @bla = params.receive_if{|letter| letter.match?(/^d$/)}
+    step = Step.new({:game => @game, :stepWord => @stepWord, :inPlaceLetterCount => @in_place.length, :existLetterCount => @exist.length})
+    step.save
+    @game.increment(:stepCount, 1)
+    @game.save
   end
 
   def game
@@ -47,7 +54,7 @@ class GamesController < ApplicationController
       @bla = "True"
     else
       @try.save
-      @id = @try.id
+      @word_id = @try.id
       @game = Game.new({:word => @try, :stepCount => 0})
       @game.save
       @bla = "False"

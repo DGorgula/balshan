@@ -6,6 +6,7 @@
     <%=  form.text_field "letter"+times.to_s, maxlength: 1%>
     <% end %>
     <%= form.text_field "word_length", hidden: true, value: @word.length %>
-    <%= form.text_field "word_id", hidden: true, value: @id %>
+    <%= form.text_field "word_id", hidden: true, value: @word_id %>
+    <%= form.text_field "game_id", hidden: true, value: @game.id %>
   <%=  form.submit %>
   <% end %>
