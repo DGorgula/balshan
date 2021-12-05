@@ -2,9 +2,7 @@
 </br>
 </br>
 <%= form_with( url: '/games/check_step') do |form| %>
-  <%  for times in 0..@word.length-1 %>
-    <%=  form.text_field "letter"+times.to_s, maxlength: 1%>
-    <% end %>
+    <%=  form.text_field "stepWord", maxlength: @word.length%>
     <%= form.text_field "word_length", hidden: true, value: @word.length %>
     <%= form.text_field "word_id", hidden: true, value: @word_id %>
     <%= form.text_field "game_id", hidden: true, value: @game.id %>

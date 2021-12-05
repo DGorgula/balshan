@@ -2,5 +2,14 @@ Game:<%=@game.id %>
 Game StepCount:<%=@game.stepCount %>
 Word:<%=@word_id %>
 <%=@word %>
+<%=@revealed.to_a %>
 exist: <%=@exist %>
 on spot:<%=@in_place %>
+<%=@updatedWord%>
+<%= form_with( url: '/games/check_step') do |form| %>
+    <%=  form.text_field "stepWord", maxlength: @word.length%>
+    <%= form.text_field "word_length", hidden: true, value: @word.length %>
+    <%= form.text_field "word_id", hidden: true, value: @word_id %>
+    <%= form.text_field "game_id", hidden: true, value: @game.id %>
+  <%=  form.submit %>
+  <% end %>

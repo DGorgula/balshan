@@ -18,24 +18,33 @@ class GamesController < ApplicationController
     @stepWord = ""
     @exist = []
     @in_place = []
-    for t in 0..word_length
-      letter = params["letter"+t.to_s]
-      @stepWord = @stepWord + letter
+    params["stepWord"].each_char.with_index do |letter, index|
       if @word.include?(letter)
-        if @word.index(letter) === t
-          @in_place.append({"index"=>t, "letter" => letter})
-          newIndex = RevealedIndex.new({:game => @game, :index => t})
+        if @word.index(letter) === index
+          @in_place.append(Hash[index, letter])
+          newIndex = RevealedIndex.new(game: @game, index: index)
           newIndex.save
         else
-          @exist.append({"index"=>t, "letter" => letter})
+          @exist.append(Hash[index, letter])
         end
-
       end
     end
-    step = Step.new({:game => @game, :stepWord => @stepWord, :inPlaceLetterCount => @in_place.length, :existLetterCount => @exist.length})
+    step = Step.new(game: @game, stepWord: @stepWord, inPlaceLetterCount: @in_place.length, existLetterCount: @exist.length)
     step.save
     @game.increment(:stepCount, 1)
     @game.save
+    @revealed = RevealedIndex.where(game: @game.id)
+    @updatedWord = ""
+    @word.each_char { |c|
+      puts c
+      puts @in_place.include?(c)
+    if @in_place.include?(c)
+      puts "DFGXHGVKJHN;LKNLMNKYGFKYHFGGFV"
+      @updatedWord = @updatedWord+c+" "
+    else
+      puts "YHFGGFV"
+      @updatedWord = @updatedWord+"_ "
+    end }
   end
 
   def game
@@ -45,21 +54,22 @@ class GamesController < ApplicationController
     optionalWords = get_optional_words
     @chosenWord = optionalWords[rand(optionalWords.length)]
     @word = @chosenWord["ktiv_male"]
-    @isWordSaved = Word.find_by(ktiv_male: @word)
+    @savedWord = Word.find_by(ktiv_male: @word)
     @keyword = @chosenWord["keyword"].split("_")[0]
     @definition = @chosenWord["hagdara"]
-    @try = Word.new({:word => @keyword, :letterCount => @word.length, :sessionCount => 0, :ktiv_male => @word, :definition => @definition})
-    @bla = "neutral"
-    if @isWordSaved
-      @bla = "True"
+    if @savedWord
+      puts "========================word exist!"
+      @savedWord.increment(:sessionCount, 1)
+      @savedWord.save
     else
-      @try.save
-      @word_id = @try.id
-      @game = Game.new({:word => @try, :stepCount => 0})
+    @savedWord = Word.new(word: @keyword, letterCount: @word.length, sessionCount: 0, ktiv_male: @word, definition: @definition)
+      @savedWord.save
+      @word_id = @savedWord.id
+      @game = Game.new(word: @savedWord, stepCount: 0)
       @game.save
-      @bla = "False"
+      puts "=======================word doesnt exist, created new one."
     end
-    # if @try.save
+    # if @savedWord.save
     #   format.html { redirect_to @try, notice: "Word was successfully created." }
     #   format.json { render :show, status: :created, location: @try }
     # else
