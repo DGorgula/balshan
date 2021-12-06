@@ -15,36 +15,43 @@ class GamesController < ApplicationController
     @game = Game.find(params['game_id'].to_i)
     word = Word.find(@word_id)
     @word = word["ktiv_male"]
-    @stepWord = ""
+    @stepWord = params["stepWord"]
     @exist = []
     @in_place = []
-    params["stepWord"].each_char.with_index do |letter, index|
-      if @word.include?(letter)
-        if @word.index(letter) === index
-          @in_place.append(Hash[index, letter])
-          newIndex = RevealedIndex.new(game: @game, index: index)
+    @stepWord.each_char.with_index do |letter, stepWordIndex|
+      checkedLetters = ""
+      if checkedLetters.include?(letter)
+        next
+      end
+      letterIndices = (0..@word.length).find_all do |i|
+        @word[i]===letter
+      end
+      letterIndices.each do |wordIndex|
+        if stepWordIndex === wordIndex
+          @in_place.append(Hash[wordIndex, letter])
+          newIndex = RevealedIndex.new(game_id: @game.id.to_i, index: stepWordIndex)
           newIndex.save
         else
-          @exist.append(Hash[index, letter])
+          @exist.append(Hash[stepWordIndex, letter])
         end
       end
     end
     step = Step.new(game: @game, stepWord: @stepWord, inPlaceLetterCount: @in_place.length, existLetterCount: @exist.length)
     step.save
+    @gameSteps = Step.where(game: @game).pluck(:stepWord)
     @game.increment(:stepCount, 1)
     @game.save
-    @revealed = RevealedIndex.where(game: @game.id)
+    @revealedIndices = RevealedIndex.where(game_id: @game.id.to_i).pluck(:index)
     @updatedWord = ""
-    @word.each_char { |c|
-      puts c
-      puts @in_place.include?(c)
-    if @in_place.include?(c)
-      puts "DFGXHGVKJHN;LKNLMNKYGFKYHFGGFV"
-      @updatedWord = @updatedWord+c+" "
-    else
-      puts "YHFGGFV"
-      @updatedWord = @updatedWord+"_ "
-    end }
+    @word.each_char.with_index do |c, i|
+      if @revealedIndices.include?(i)
+        puts "DFGXHGVKJHN;LKNLMNKYGFKYHFGGFV"
+        @updatedWord = @updatedWord+c+" "
+      else
+        puts "YHFGGFV"
+        @updatedWord = @updatedWord+"_ "
+      end
+    end
   end
 
   def game
