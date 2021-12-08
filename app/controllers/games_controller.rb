@@ -50,7 +50,10 @@ class GamesController < ApplicationController
     @game.save
     revealed_indices = RevealedIndex.where(game_id: @game.id.to_i).pluck(:index)
     mismatched_indices = MismatchedIndex.where(game_id: @game.id.to_i).pluck(:index)
-    @updated_word = get_display_word(@word, revealed_indices)
+    @updated_word, @is_game_over = get_display_word(@word, revealed_indices)
+    if @is_game_over
+      @dict_word, @definition = word["word"], word["definition"]
+    end
   end
 
   def game
@@ -173,15 +176,18 @@ class GamesController < ApplicationController
 
     def get_display_word(word, revealed_indices)
       updated_word = ""
+      is_full_word_revealed = true
       word.each_char.with_index do |c, i|
         if revealed_indices.include?(i)
           # puts "DFGXHGVKJHN;LKNLMNKYGFKYHFGGFV"
           updated_word = updated_word+c+" "
         else
-          # puts "YHFGGFV"
+          if is_full_word_revealed === true
+            is_full_word_revealed = false
+          end
           updated_word = updated_word+"_ "
         end
       end
-      return updated_word
+      return updated_word, is_full_word_revealed
     end
 end

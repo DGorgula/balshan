@@ -12,6 +12,12 @@ Game StepCount:<%=@game.stepCount %>
 </li>
 <% end %>
 </ul>
+<% if @is_game_over %>
+  <%= "Congratulation! Game Over!\n" %>
+  <%= @dict_word %>
+  <%=  @definition %>
+  <%= link_to "New Game", action: "generate" %>
+<% else %>
 
 <%= form_with( url: '/games/check_step') do |form| %>
 <%## # TODO: add :pattern to make use all letters.%>
@@ -21,5 +27,6 @@ Game StepCount:<%=@game.stepCount %>
     <%= form.text_field "game_id", hidden: true, value: @game.id %>
   <%=  form.submit %>
   <% end %>
+<% end %>
   exist: <%=@exist %>
   on spot:<%=@in_place %>
