@@ -5,7 +5,6 @@ class GamesController < ApplicationController
   # GET /games or /games.json
   def index
     @games = Game.all
-    # @games = Game.joins(word: {id: })
   end
 
   #
@@ -16,42 +15,42 @@ class GamesController < ApplicationController
     word = Word.find(@word_id)
     @word = word["ktiv_male"]
     @stepWord = params["stepWord"]
+    step = Step.new(game: @game, stepWord: @stepWord)
+    step.save
     @exist = []
     @in_place = []
     @stepWord.each_char.with_index do |letter, stepWordIndex|
       checkedLetters = ""
       if checkedLetters.include?(letter)
+        puts "the letter is already exist:", letter
         next
       end
+      puts "after letter check:", letter
       letterIndices = (0..@word.length).find_all do |i|
         @word[i]===letter
       end
       letterIndices.each do |wordIndex|
+        if checkedLetters.include?(letter)
+          puts "the letter is already exist:", letter
+          next
+        end
         if stepWordIndex === wordIndex
           @in_place.append(Hash[wordIndex, letter])
-          newIndex = RevealedIndex.new(game_id: @game.id.to_i, index: stepWordIndex)
+          newIndex = RevealedIndex.new(game_id: @game.id.to_i, step_id: step.id.to_i, index: stepWordIndex)
           newIndex.save
         else
           @exist.append(Hash[stepWordIndex, letter])
+          newIndex = MismatchedIndex.new(game_id: @game.id.to_i, step_id: step.id.to_i, index: stepWordIndex)
+          newIndex.save
         end
       end
     end
-    step = Step.new(game: @game, stepWord: @stepWord, inPlaceLetterCount: @in_place.length, existLetterCount: @exist.length)
-    step.save
     @gameSteps = Step.where(game: @game).pluck(:stepWord)
     @game.increment(:stepCount, 1)
     @game.save
-    @revealedIndices = RevealedIndex.where(game_id: @game.id.to_i).pluck(:index)
-    @updatedWord = ""
-    @word.each_char.with_index do |c, i|
-      if @revealedIndices.include?(i)
-        puts "DFGXHGVKJHN;LKNLMNKYGFKYHFGGFV"
-        @updatedWord = @updatedWord+c+" "
-      else
-        puts "YHFGGFV"
-        @updatedWord = @updatedWord+"_ "
-      end
-    end
+    revealed_indices = RevealedIndex.where(game_id: @game.id.to_i).pluck(:index)
+    mismatched_indices = MismatchedIndex.where(game_id: @game.id.to_i).pluck(:index)
+    @updated_word = get_display_word(@word, revealed_indices)
   end
 
   def game
@@ -65,7 +64,7 @@ class GamesController < ApplicationController
     @keyword = @chosenWord["keyword"].split("_")[0]
     @definition = @chosenWord["hagdara"]
     if @savedWord
-      puts "========================word exist!"
+      # puts "========================word exist!"
       @savedWord.increment(:sessionCount, 1)
       @savedWord.save
     else
@@ -74,7 +73,7 @@ class GamesController < ApplicationController
       @word_id = @savedWord.id
       @game = Game.new(word: @savedWord, stepCount: 0)
       @game.save
-      puts "=======================word doesnt exist, created new one."
+      # puts "=======================word doesnt exist, created new one."
     end
     # if @savedWord.save
     #   format.html { redirect_to @try, notice: "Word was successfully created." }
@@ -170,6 +169,19 @@ class GamesController < ApplicationController
       arr.delete_if { |obj|
         !obj["ktiv_male"] or obj["ktiv_male"].length<4 or obj["ktiv_male"].include?(" ") or obj["ktiv_male"].include?("-") or obj["ktiv_male"].include?("\"")
       }
+    end
 
+    def get_display_word(word, revealed_indices)
+      updated_word = ""
+      word.each_char.with_index do |c, i|
+        if revealed_indices.include?(i)
+          # puts "DFGXHGVKJHN;LKNLMNKYGFKYHFGGFV"
+          updated_word = updated_word+c+" "
+        else
+          # puts "YHFGGFV"
+          updated_word = updated_word+"_ "
+        end
+      end
+      return updated_word
     end
 end

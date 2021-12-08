@@ -1,0 +1,19 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Game:</strong>
+  <%= @mismatched_index.game_id %>
+</p>
+
+<p>
+  <strong>Step:</strong>
+  <%= @mismatched_index.step_id %>
+</p>
+
+<p>
+  <strong>Index:</strong>
+  <%= @mismatched_index.index %>
+</p>
+
+<%= link_to 'Edit', edit_mismatched_index_path(@mismatched_index) %> |
+<%= link_to 'Back', mismatched_indices_path %>

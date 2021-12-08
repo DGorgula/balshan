@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_12_01_173518) do
+ActiveRecord::Schema.define(version: 2021_12_08_215718) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -23,19 +23,29 @@ ActiveRecord::Schema.define(version: 2021_12_01_173518) do
     t.index ["word_id"], name: "index_games_on_word_id"
   end
 
+  create_table "mismatched_indices", force: :cascade do |t|
+    t.bigint "game_id", null: false
+    t.bigint "step_id", null: false
+    t.integer "index"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["game_id"], name: "index_mismatched_indices_on_game_id"
+    t.index ["step_id"], name: "index_mismatched_indices_on_step_id"
+  end
+
   create_table "revealed_indices", force: :cascade do |t|
     t.bigint "game_id", null: false
     t.integer "index"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.bigint "step_id", null: false
     t.index ["game_id"], name: "index_revealed_indices_on_game_id"
+    t.index ["step_id"], name: "index_revealed_indices_on_step_id"
   end
 
   create_table "steps", force: :cascade do |t|
     t.bigint "game_id", null: false
     t.string "stepWord"
-    t.integer "inPlaceLetterCount"
-    t.integer "existLetterCount"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["game_id"], name: "index_steps_on_game_id"
@@ -52,6 +62,9 @@ ActiveRecord::Schema.define(version: 2021_12_01_173518) do
   end
 
   add_foreign_key "games", "words"
+  add_foreign_key "mismatched_indices", "games"
+  add_foreign_key "mismatched_indices", "steps"
   add_foreign_key "revealed_indices", "games"
+  add_foreign_key "revealed_indices", "steps"
   add_foreign_key "steps", "games"
 end

@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  resources :mismatched_indices
   resources :steps
   resources :revealed_indices
   resources :games
