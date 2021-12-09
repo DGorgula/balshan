@@ -1,9 +1,19 @@
 // Place all the styles related to the Games controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: https://sass-lang.com/
+p, ol{
+    margin: 0 auto;
+    width: fit-content;
+}
+ol{
+    padding-right: 0;
+}
+p span{
+    font-size: 1.5rem;
+}
 li{
     display:flex;
-    // flex-direction: row;
+    width: fit-content;
 }
 .letter{
     text-align: center;
@@ -21,6 +31,4 @@ li{
     border: 2px solid rgba($color: #0023F1, $alpha: 0.5);
     display:block;
     border-radius: 50%;
-    
-
 }
