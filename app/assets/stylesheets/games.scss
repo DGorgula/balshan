@@ -1,9 +1,26 @@
 // Place all the styles related to the Games controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: https://sass-lang.com/
+li{
+    display:flex;
+    // flex-direction: row;
+}
+.letter{
+    text-align: center;
+    margin-left: 3px;
+    line-height: 16px;
+    width:16px;
+    &:not(.letter-exist):not(.letter-revealed){
+        margin-top:1.4px;
+    }
+}
 .letter-exist {
-    background-color: rgba($color: #249753, $alpha: 0.5);
+    border: 2px solid rgba($color: #249753, $alpha: 0.5);
 }
 .letter-revealed {
-    background-color: rgba($color: #0023F1, $alpha: 0.5);
+    border: 2px solid rgba($color: #0023F1, $alpha: 0.5);
+    display:block;
+    border-radius: 50%;
+    
+
 }
