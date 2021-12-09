@@ -1,32 +1,54 @@
-Game StepCount:<%=@game.stepCount %>
 <%=@updated_word%>
-<ul>
-<% @gameSteps.each do |step|%>
-<% editedStep = step %>
+<br />
+<br />
 
-  <% @exist.each do |obj| %>
-  <% editedStep = editedStep.sub(step[obj.keys[0]], " ~"+step[obj.keys[0]]+"~ ") %>
-<% end %>
+<ol>
+
+<% @gameSteps.each.with_index do |step, index|%>
+<% step_mismatch = @mismatched_indices.select do |m| m.step.stepWord === step.stepWord end %>
+<% step_mismatch_indices = step_mismatch.map do |m| m.index end%>
+<% step_revealed = @revealed_indices.select do |m| m.step_id === step.id end %>
+<% step_revealed_indices = step_revealed.map do |m| m.index end %>
+<% editedStep = step.stepWord %>
+
+
 <li>
-  <%= editedStep %>
-</li>
+
+<% step.stepWord.each_char.with_index do |l, i| %>
+
+<% if step_revealed_indices.include?(i) %>
+<span class="letter letter-revealed"><%= l %></span>
+<% elsif step_mismatch_indices.include?(i) %>
+<span class="letter letter-exist"><%= l %></span>
+<% else %>
+  <span class="letter"><%= l %></span>
 <% end %>
-</ul>
+<% end %>
+<%#= step_mismatch_indices %>
+<%#= step_revealed_indices %>
+</li>
+<br />
+<% end %>
+</ol>
 <% if @is_game_over %>
-  <%= "Congratulation! Game Over!\n" %>
-  <%= @dict_word %>
+  <%= "כל הכבוד! חשפת את המילה!" %>
+  <br />
+  <br />
+  <b><%= @dict_word %>:</b>
+  <br />
   <%=  @definition %>
-  <%= link_to "New Game", action: "generate" %>
+  <br />
+  <%= link_to "סיבוב נוסף", action: "generate" %>
 <% else %>
 
 <%= form_with( url: '/games/check_step') do |form| %>
-<%## # TODO: add :pattern to make use all letters.%>
+<%## # TODO: add :pattern to make sure input filled with all letters.%>
     <%=  form.text_field "stepWord", maxlength: @word.length  %>
     <%= form.text_field "word_length", hidden: true, value: @word.length %>
     <%= form.text_field "word_id", hidden: true, value: @word_id %>
     <%= form.text_field "game_id", hidden: true, value: @game.id %>
-  <%=  form.submit %>
+  <%=  form.submit "בדוק"%>
   <% end %>
 <% end %>
-  exist: <%=@exist %>
-  on spot:<%=@in_place %>
+  <%# exist: <%=@exist %> 
+  <%# on spot:<%=@in_place %> 

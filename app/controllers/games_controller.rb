@@ -45,12 +45,12 @@ class GamesController < ApplicationController
         end
       end
     end
-    @gameSteps = Step.where(game: @game).pluck(:stepWord)
+    @gameSteps = Step.where(game: @game)
     @game.increment(:stepCount, 1)
     @game.save
-    revealed_indices = RevealedIndex.where(game_id: @game.id.to_i).pluck(:index)
-    mismatched_indices = MismatchedIndex.where(game_id: @game.id.to_i).pluck(:index)
-    @updated_word, @is_game_over = get_display_word(@word, revealed_indices)
+    @revealed_indices = RevealedIndex.where(game_id: @game.id.to_i)
+    @mismatched_indices = MismatchedIndex.where(game_id: @game.id.to_i)
+    @updated_word, @is_game_over = get_display_word(@word, @revealed_indices.map do |obj| obj.index.to_i end)
     if @is_game_over
       @dict_word, @definition = word["word"], word["definition"]
     end
@@ -177,6 +177,7 @@ class GamesController < ApplicationController
     def get_display_word(word, revealed_indices)
       updated_word = ""
       is_full_word_revealed = true
+      puts revealed_indices
       word.each_char.with_index do |c, i|
         if revealed_indices.include?(i)
           # puts "DFGXHGVKJHN;LKNLMNKYGFKYHFGGFV"

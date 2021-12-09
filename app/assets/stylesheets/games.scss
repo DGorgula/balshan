@@ -1,3 +1,9 @@
 // Place all the styles related to the Games controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: https://sass-lang.com/
+.letter-exist {
+    background-color: rgba($color: #249753, $alpha: 0.5);
+}
+.letter-revealed {
+    background-color: rgba($color: #0023F1, $alpha: 0.5);
+}
