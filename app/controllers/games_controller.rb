@@ -71,7 +71,7 @@ class GamesController < ApplicationController
       @savedWord.increment(:sessionCount, 1)
       @savedWord.save
     else
-    @savedWord = Word.new(word: @keyword, letterCount: @word.length, sessionCount: 0, ktiv_male: @word, definition: @definition)
+    @savedWord = Word.new(word: @keyword, letterCount: @word.length, sessionCount: 1, ktiv_male: @word, definition: @definition)
       @savedWord.save
       @word_id = @savedWord.id
       @game = Game.new(word: @savedWord, stepCount: 0)

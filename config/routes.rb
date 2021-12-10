@@ -1,10 +1,10 @@
 Rails.application.routes.draw do
-  resources :mismatched_indices
-  resources :steps
-  resources :revealed_indices
-  resources :games
+  # resources :mismatched_indices
+  # resources :steps
+  # resources :revealed_indices
+  # resources :games
+  # resources :words
   root 'games#generate'
-  resources :words
   post 'games/check_step', to: 'games#check_step'
   # get 'photos/:id', to: 'photos#show'
 

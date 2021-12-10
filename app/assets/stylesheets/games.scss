@@ -26,9 +26,9 @@ li{
 }
 .letter-exist {
     border: 2px solid rgba($color: #249753, $alpha: 0.5);
+    display:block;
+    border-radius: 50%;
 }
 .letter-revealed {
     border: 2px solid rgba($color: #0023F1, $alpha: 0.5);
-    display:block;
-    border-radius: 50%;
 }
