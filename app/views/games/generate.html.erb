@@ -1,6 +1,10 @@
-<%="_ " * @word.length %>
-</br>
-</br>
+<p>
+<% @word.each_char do |char| %>
+    <span class="letter">_</span>
+<% end %>
+</p>
+<br />
+<br />
 <%= form_with( url: '/games/check_step') do |form| %>
     <%=  form.text_field "stepWord", maxlength: @word.length%>
     <%= form.text_field "word_length", hidden: true, value: @word.length %>

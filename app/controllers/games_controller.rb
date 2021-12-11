@@ -170,7 +170,7 @@ class GamesController < ApplicationController
     end
     def clean(arr)
       arr.delete_if { |obj|
-        !obj["ktiv_male"] or obj["ktiv_male"].length<4 or obj["ktiv_male"].include?(" ") or obj["ktiv_male"].include?("-") or obj["ktiv_male"].include?("\"")
+        !obj["ktiv_male"] or obj["ktiv_male"].length<4 or obj["ktiv_male"].include?(" ") or obj["ktiv_male"].include?("־") or obj["ktiv_male"].include?("\"")
       }
     end
 

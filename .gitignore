@@ -5,9 +5,6 @@
 #   git config --global core.excludesfile '~/.gitignore_global'
 
 
-# Ignore route page as it suppose to be fixed for users.
-/config/routes.rb
-
 
 # Ignore bundler config.
 /.bundle
