@@ -32,3 +32,24 @@ li{
 .letter-revealed {
     border: 2px solid rgba($color: #0023F1, $alpha: 0.5);
 }
+.hebrew-academic-icon{
+    // background: url(asset_url("hebrew-academic-icon.png")) no-repeat;
+
+    &:hover{
+        // background: url(asset_url("hebrew-academic-hover-icon.png")) no-repeat;
+        background: none;
+    }
+    
+
+}
+.revealed-block{
+    display: flex;
+    align-items: center;
+    .revealed-word{
+        font-size: 2rem;
+    }
+}
+.definition{
+    font-size: 1.5rem;
+    line-height: 1.7rem;
+}

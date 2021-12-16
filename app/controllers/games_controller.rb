@@ -150,12 +150,12 @@ class GamesController < ApplicationController
     # Http Request to Calanit to get optional words
     def get_optional_words
       endingLetters = ["%D7%9a", "%D7%9d", "%D7%9f", "%D7%a3", "%D7%a5"]
-      letters = Array.new(27) { |e|
+      letters = Array.new(27) do |e|
         e = "%D7%"+(144 + e).to_s(16)
-      }
-      endingLetters.each { |arr|
+      end
+      endingLetters.each do |arr|
           letters.delete(arr)
-      }
+      end
 
 
       letter1 = letters[rand(letters.length)]

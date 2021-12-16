@@ -38,9 +38,14 @@
   <%= "כל הכבוד! חשפת את המילה!" %>
   <br />
   <br />
-  <b><%= @dict_word %>:</b>
+  <p class="revealed-block" >
+    <b class="revealed-word"><%= @dict_word %>  </b>
+    <%= link_to "https://hebrew-academy.org.il/keyword/"+@dict_word, class: "hebrew-academic-icon", target: "_blank" do %>
+      <%= image_tag "hebrew-academy-icon.png" %>
+    <% end %>
+  </p>
   <br />
-  <%=  @definition %>
+  <p class="definition">   <%=@definition %></p>
   <br />
   <%= link_to "סיבוב נוסף", action: "generate" %>
 <% else %>
